@@ -8,9 +8,12 @@ use OC\Mail\EMailTemplate as ParentTemplate;
 use OCP\Defaults;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
+use OCP\IL10N;
 
 class CustomEMailTemplate extends ParentTemplate
 {
+	private IL10N $l;
+
 	public function __construct(
 		Defaults $defaults,
 		IURLGenerator $urlGenerator,
@@ -22,10 +25,13 @@ class CustomEMailTemplate extends ParentTemplate
 	) {
 		parent::__construct($defaults, $urlGenerator, $l10nFactory, $logoWidth, $logoHeight, $emailId, $data);
 
-		$spacerUrl = $this->urlGenerator->imagePath('mailtemplate', 'spacer.png');
-		$logoUrl = $this->urlGenerator->imagePath('mailtemplate', 'ionos_logo_de.png');
-		$emailIconUrl = $this->urlGenerator->imagePath('mailtemplate', 'email.png');
-		$listItemIconUrl = $this->urlGenerator->imagePath('mailtemplate', 'list-item-icon.png');
+		// Initialize localization object
+		$this->l = $l10nFactory->get('mailtemplate');
+
+		$spacerUrl = $this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath('mailtemplate', 'spacer.png'));
+		$logoUrl = $this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath('mailtemplate', 'ionos_logo_de.png'));
+		$emailIconUrl = $this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath('mailtemplate', 'email.png'));
+		$listItemIconUrl = $this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath('mailtemplate', 'list-item-icon.png'));
 
 		$this->head = '
 			<!-- start head -->
@@ -187,7 +193,7 @@ class CustomEMailTemplate extends ParentTemplate
 										<img src="' . $spacerUrl . '" width="20" height="1" class="w-20 h-1" style="display:block;width:20px;height:1px;border:0" alt=" " border="0" />
 									</td>
 									<td class="w-112 minw-112 h-32 minh-32" align="left" valign="middle" height="32" style="min-width:112px;width:112px;min-height:32px;height:32px" >
-										<img src="' . $logoUrl . '" border="0" title="IONOS" alt="IONOS " class="w-112 h-32" width="112" height="32" style="color:#465A75;margin:0;border:0;font-size:15px;font-family:\'Open Sans\', \'Google Sans\', Arial, sans-serif;line-height:0;display:block;width:112px;height:32px;padding:0" />
+										<img src="' . $logoUrl . '" border="0" title="IONOS" alt="IONOS Logo" class="w-112 h-32" width="112" height="32" style="color:#465A75;margin:0;border:0;font-size:15px;font-family:\'Open Sans\', \'Google Sans\', Arial, sans-serif;line-height:0;display:block;width:112px;height:32px;padding:0" />
 									</td>
 									<td class="w-10 minw-10" style="min-width:10px;width:10px;line-height:1px;font-size:0px" >
 										<img src="' . $spacerUrl . '" width="10" height="1" class="w-10 h-1" style="display:block;width:10px;height:1px;border:0" alt=" " border="0" />
@@ -345,7 +351,7 @@ class CustomEMailTemplate extends ParentTemplate
 												</td>
 												<td width="15">
 													<p style="padding:2px 0 0 0;margin:0;text-align:left;line-height:20px">
-														<img src="' . $listItemIconUrl . '" alt="{listItem - $icon}">
+														<img src="' . $listItemIconUrl . '" alt="' . $this->l->t('List item icon') . '">
 													</p>
 												</td>
 												<td class="w-10 minw-10" style="min-width:10px;width:10px;line-height:1px;font-size:0px">
@@ -399,13 +405,13 @@ class CustomEMailTemplate extends ParentTemplate
 					<table cellpadding="0" cellspacing="0" border="0" name="halign" width="100%%" style="width:100%%;border-spacing:0" >
 						<tr valign="top" >
 							<td align="center" >
-								<a href="%s" class="button" target="_blank">
-									%s
+								<a href="%3$s" class="button" target="_blank" style="background-color: rgb(17, 199, 230);border: 2px solid rgb(17, 199, 230);border-radius: 40px;box-sizing: border-box;color: rgb(11, 42, 99);cursor: pointer;display: inline-grid;font-size: 12px;font-weight: 600;height: 36px;line-height: 20px;padding: 6px 12px;text-align: center;text-decoration: none;">
+									%7$s
 								</a>
 							</td>
 							<td align="center" >
-								<a href="%s" class="button" target="_blank">
-									%s
+								<a href="%8$s" class="button" target="_blank" style="background-color: rgb(17, 199, 230);border: 2px solid rgb(17, 199, 230);border-radius: 40px;box-sizing: border-box;color: rgb(11, 42, 99);cursor: pointer;display: inline-grid;font-size: 12px;font-weight: 600;height: 36px;line-height: 20px;padding: 6px 12px;text-align: center;text-decoration: none;">
+									%9$s
 								</a>
 							</td>
 						</tr>
@@ -431,8 +437,8 @@ class CustomEMailTemplate extends ParentTemplate
 					<table cellpadding="0" cellspacing="0" border="0" name="halign" width="100%%" style="width:100%%;border-spacing:0" >
 						<tr valign="top" >
 							<td align="center" >
-								<a href="%s" class="button" target="_blank">
-									%s
+								<a href="%3$s" class="button" target="_blank" style="background-color: rgb(17, 199, 230);border: 2px solid rgb(17, 199, 230);border-radius: 40px;box-sizing: border-box;color: rgb(11, 42, 99);cursor: pointer;display: inline-grid;font-size: 12px;font-weight: 600;height: 36px;line-height: 20px;padding: 6px 12px;text-align: center;text-decoration: none;">
+									%7$s
 								</a>
 							</td>
 						</tr>
@@ -456,7 +462,7 @@ class CustomEMailTemplate extends ParentTemplate
 		$this->bodyEnd = '
 				<!-- Start bodyEnd -->
 											<p class="footer-greeting" style="padding:0 0 0 0;margin:0;text-align:left;line-height:20px" >
-												<font class="footer-font" style="font-family:\'Open Sans\', \'Google Sans\', Arial, sans-serif;font-size:15px;font-weight:normal;color:#465A75;line-height:20px" >Mit freundlichen Gr&#252;&#223;en<br/>IONOS SE<br/></font>
+												<font class="footer-font" style="font-family:\'Open Sans\', \'Google Sans\', Arial, sans-serif;font-size:15px;font-weight:normal;color:#465A75;line-height:20px" >' . $this->l->t('Best regards') . '<br/>IONOS SE<br/></font>
 											</p>
 										</td>
 										<td width="20" style="min-width:20px;width:20px;line-height:1px;font-size:0px" >
@@ -512,11 +518,11 @@ class CustomEMailTemplate extends ParentTemplate
 												<font class="footer-address-font" style="font-family:\'Open Sans\', \'Google Sans\', Arial, sans-serif;font-size:14px;font-weight:normal;color:#465A75;line-height:18px" >IONOS SE
 													<br/>Elgendorfer Straße 57
 													<br/>56410 Montabaur
-													<br/>Germany
+													<br/>' . $this->l->t('Germany') . '
 												</font>
 											</p>
 											<p>
-												<a href="https://ionos.eu" class="footer-link" style="font-family:\'Open Sans\', \'Google Sans\', Arial, sans-serif;font-size:14px;font-weight:normal;color:#465A75;line-height:18px" target="_blank">Weitere Informationen</a>
+												<a href="https://ionos.eu" class="footer-link" style="font-family:\'Open Sans\', \'Google Sans\', Arial, sans-serif;font-size:14px;font-weight:normal;color:#465A75;line-height:18px" target="_blank">' . $this->l->t('Further information') . '</a>
 											</p>
 											<table cellpadding="0" cellspacing="0" border="0" width="100%%" >
 												<tr>
