@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<app>
+  <id>mailtemplate</id>
+  <name>Mail Template</name>
+  <description>Customised email templates for Nextcloud</description>
+  <version>1.0.0</version>
+  <author>aheld</author>
+  <namespace>OCA\MailTemplate</namespace>
+<dependencies>
+    <nextcloud min-version="31" max-version="31"/>
+</dependencies>
+</app>
