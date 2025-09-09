@@ -1,0 +1,11 @@
+OC.L10N.register(
+    "mailtemplate",
+    {
+    "Best regards" : "Mit freundlichen Grüßen",
+    "Customised email templates for Nextcloud" : "Maßgeschneiderte E-Mail-Vorlagen für Nextcloud",
+    "Germany" : "Deutschland",
+    "List item icon" : "Listenelement-Symbol",
+    "Mail Template" : "Mail-Vorlage",
+    "Further information" : "Weitere Informationen"
+},
+"nplurals=2; plural=(n==1) ? 0 : 1;");
