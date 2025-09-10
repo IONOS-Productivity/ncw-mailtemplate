@@ -14,13 +14,4 @@
 	<dependencies>
 		<nextcloud min-version="30" max-version="32"/>
 	</dependencies>
-	<navigations>
-		<navigation>
-			<id>mailtemplate</id>
-			<name>Mailtemplate</name>
-			<route>mailtemplate.page.index</route>
-			<icon>app.svg</icon>
-			<type>link</type>
-		</navigation>
-	</navigations>
 </info>
