@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
-	<id>mailtemplate</id>
-	<name>Mailtemplate</name>
+	<id>ncw_mailtemplate</id>
+	<name>NCW Mailtemplate</name>
 	<summary>Customised email templates for Nextcloud</summary>
 	<description>Customised email templates for Nextcloud</description>
 	<version>1.0.0</version>
