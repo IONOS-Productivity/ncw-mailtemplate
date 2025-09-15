@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\MailTemplate;
+namespace OCA\Mailtemplate;
 
 use OC\Mail\EMailTemplate as ParentTemplate;
 use OCP\Defaults;
@@ -10,7 +10,7 @@ use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 use OCP\IL10N;
 
-class CustomEMailTemplate extends ParentTemplate
+class EMailTemplate extends ParentTemplate
 {
 	private IL10N $l;
 
