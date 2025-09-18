@@ -6,12 +6,11 @@ namespace OCA\Mailtemplate;
 
 use OC\Mail\EMailTemplate as ParentTemplate;
 use OCP\Defaults;
+use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
-use OCP\IL10N;
 
-class EMailTemplate extends ParentTemplate
-{
+class EMailTemplate extends ParentTemplate {
 	private IL10N $l;
 
 	// Generated asset URLs (filled in constructor)
@@ -44,7 +43,7 @@ class EMailTemplate extends ParentTemplate
 		?int $logoWidth,
 		?int $logoHeight,
 		string $emailId,
-		array $data = []
+		array $data = [],
 	) {
 		parent::__construct($defaults, $urlGenerator, $l10nFactory, $logoWidth, $logoHeight, $emailId, $data);
 
@@ -101,7 +100,7 @@ class EMailTemplate extends ParentTemplate
 			// Replace concatenated localization calls like ' . $this->l->t('...') . '
 			$content = preg_replace_callback(
 				"/\'\s*\.\s*\\\$this->l->t\('([^']+)'\)\s*\.\s*\'/",
-				function(array $m) {
+				function (array $m) {
 					// return translated string
 					return $this->l->t($m[1]);
 				},
