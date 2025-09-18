@@ -20,7 +20,7 @@ class EMailTemplate extends ParentTemplate {
 	private string $listItemIconUrl = '';
 
 	// HTML template files for email components
-	private const HTML_TEMPLATE_FILES = [
+	private const array HTML_TEMPLATE_FILES = [
 		'head' => 'head.html',
 		'header' => 'header.html',
 		'heading' => 'heading.html',
@@ -36,6 +36,15 @@ class EMailTemplate extends ParentTemplate {
 		'tail' => 'tail.html'
 	];
 
+	/**
+	 * @param Defaults $defaults
+	 * @param IURLGenerator $urlGenerator
+	 * @param IFactory $l10nFactory
+	 * @param int|null $logoWidth
+	 * @param int|null $logoHeight
+	 * @param string $emailId
+	 * @param array $data
+	 */
 	public function __construct(
 		Defaults $defaults,
 		IURLGenerator $urlGenerator,
@@ -100,10 +109,7 @@ class EMailTemplate extends ParentTemplate {
 			// Replace concatenated localization calls like ' . $this->l->t('...') . '
 			$content = preg_replace_callback(
 				"/\'\s*\.\s*\\\$this->l->t\('([^']+)'\)\s*\.\s*\'/",
-				function (array $m) {
-					// return translated string
-					return $this->l->t($m[1]);
-				},
+				fn(array $m) => $this->l->t($m[1]),
 				$content
 			);
 
