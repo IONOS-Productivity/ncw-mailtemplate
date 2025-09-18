@@ -77,7 +77,7 @@ class EMailTemplate extends ParentTemplate {
 	 */
 	private function loadHtmlTemplateFiles(): void {
 		foreach (self::HTML_TEMPLATE_FILES as $property => $file) {
-			$content = file_get_contents(__DIR__ . '/' . $file);
+			$content = file_get_contents(__DIR__ . '/templates/email/' . $file);
 			if ($content === false) {
 				continue;
 			}
