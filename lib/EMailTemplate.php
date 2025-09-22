@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace OCA\Mailtemplate;
+namespace OCA\NcwMailtemplate;
 
 use OC\Mail\EMailTemplate as ParentTemplate;
+use OCA\NcwMailtemplate\AppInfo\Application;
 use OCP\Defaults;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
-use OCA\Mailtemplate\AppInfo\Application;
 
 class EMailTemplate extends ParentTemplate {
 	private IL10N $l;
