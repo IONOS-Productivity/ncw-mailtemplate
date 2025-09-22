@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.3",
     "info": {
-        "title": "mailtemplate",
+        "title": "ncw_mailtemplate",
         "version": "0.0.1",
         "description": "Customised email templates for Nextcloud",
         "license": {
@@ -47,7 +47,7 @@
         }
     },
     "paths": {
-        "/ocs/v2.php/apps/mailtemplate/api": {
+        "/ocs/v2.php/apps/ncw_mailtemplate/api": {
             "get": {
                 "operationId": "api-index",
                 "summary": "An example API endpoint",

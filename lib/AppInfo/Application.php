@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\Mailtemplate\AppInfo;
+namespace OCA\NcwMailtemplate\AppInfo;
 
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;

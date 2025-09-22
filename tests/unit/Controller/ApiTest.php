@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Controller;
 
-use OCA\Mailtemplate\AppInfo\Application;
-use OCA\Mailtemplate\Controller\ApiController;
+use OCA\NcwMailtemplate\AppInfo\Application;
+use OCA\NcwMailtemplate\Controller\ApiController;
 use OCP\IRequest;
 use PHPUnit\Framework\TestCase;
 
