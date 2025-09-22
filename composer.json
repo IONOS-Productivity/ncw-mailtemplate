@@ -1,5 +1,5 @@
 {
-	"name": "nextcloud/mailtemplate",
+	"name": "nextcloud/ncw_mailtemplate",
 	"description": "Customised email templates for Nextcloud",
 	"license": "AGPL-3.0-or-later",
 	"authors": [
