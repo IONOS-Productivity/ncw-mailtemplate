@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "mailtemplate",
+    "ncw_mailtemplate",
     {
     "Best regards" : "Vriendelijke groeten",
     "Customised email templates for Nextcloud" : "Aangepaste e-mailsjablonen voor Nextcloud",
