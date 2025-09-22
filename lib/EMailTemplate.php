@@ -9,6 +9,7 @@ use OCP\Defaults;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
+use OCA\Mailtemplate\AppInfo\Application;
 
 class EMailTemplate extends ParentTemplate {
 	private IL10N $l;
@@ -57,7 +58,7 @@ class EMailTemplate extends ParentTemplate {
 		parent::__construct($defaults, $urlGenerator, $l10nFactory, $logoWidth, $logoHeight, $emailId, $data);
 
 		// Initialize localization object
-		$this->l = $l10nFactory->get('mailtemplate');
+		$this->l = $l10nFactory->get(Application::APP_ID);
 
 		// Generate URLs for template assets
 		$this->generateTemplateAssetUrls($urlGenerator);
@@ -73,10 +74,10 @@ class EMailTemplate extends ParentTemplate {
 	 */
 	private function generateTemplateAssetUrls(IURLGenerator $urlGenerator): void {
 		// store on the instance so we can inject into templates
-		$this->spacerUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath('mailtemplate', 'spacer.png'));
-		$this->logoUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath('mailtemplate', 'ionos_logo_de.png'));
-		$this->emailIconUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath('mailtemplate', 'email.png'));
-		$this->listItemIconUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath('mailtemplate', 'list-item-icon.png'));
+		$this->spacerUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, 'spacer.png'));
+		$this->logoUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, 'ionos_logo_de.png'));
+		$this->emailIconUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, 'email.png'));
+		$this->listItemIconUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, 'list-item-icon.png'));
 	}
 
 	/**
