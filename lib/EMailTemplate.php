@@ -87,32 +87,22 @@ class EMailTemplate extends ParentTemplate {
 	 */
 	private function loadHtmlTemplateFiles(): void {
 		foreach (self::HTML_TEMPLATE_FILES as $property => $file) {
-			$content = file_get_contents(__DIR__ . '/templates/email/' . $file);
-			if ($content === false) {
+			$templatePath = __DIR__ . '/templates/email/' . $file;
+			if (!file_exists($templatePath)) {
 				continue;
 			}
 
-			// Replace PHP-style concatenations for asset URLs that were previously in the HTML
-			$search = [
-				"' . \$spacerUrl . '",
-				"' . \$logoUrl . '",
-				"' . \$emailIconUrl . '",
-				"' . \$listItemIconUrl . '",
-			];
-			$replace = [
-				$this->spacerUrl,
-				$this->logoUrl,
-				$this->emailIconUrl,
-				$this->listItemIconUrl,
-			];
-			$content = str_replace($search, $replace, $content);
+			// Make variables available in template scope
+			$spacerUrl = $this->spacerUrl;
+			$logoUrl = $this->logoUrl;
+			$emailIconUrl = $this->emailIconUrl;
+			$listItemIconUrl = $this->listItemIconUrl;
+			$l = $this->l;
 
-			// Replace concatenated localization calls like ' . $this->l->t('...') . '
-			$content = preg_replace_callback(
-				"/\'\s*\.\s*\\\$this->l->t\('([^']+)'\)\s*\.\s*\'/",
-				fn (array $m) => $this->l->t($m[1]),
-				$content
-			);
+			// Render PHP template to HTML
+			ob_start();
+			include $templatePath;
+			$content = ob_get_clean();
 
 			$this->$property = $content . PHP_EOL;
 		}
