@@ -100,14 +100,14 @@ class EMailTemplateTest extends TestCase {
 	}
 
 	public function testAssetUrlsAreGenerated(): void {
-	$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('spacerUrl'));
-	$this->assertStringContainsString('spacer.png', $this->getPrivateProperty('spacerUrl'));
-	$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('logoUrl'));
-	$this->assertStringContainsString('ionos_logo_de.png', $this->getPrivateProperty('logoUrl'));
-	$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('emailIconUrl'));
-	$this->assertStringContainsString('email.png', $this->getPrivateProperty('emailIconUrl'));
-	$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('listItemIconUrl'));
-	$this->assertStringContainsString('list-item-icon.png', $this->getPrivateProperty('listItemIconUrl'));
+		$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('spacerUrl'));
+		$this->assertStringContainsString('spacer.png', $this->getPrivateProperty('spacerUrl'));
+		$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('logoUrl'));
+		$this->assertStringContainsString('ionos_logo_de.png', $this->getPrivateProperty('logoUrl'));
+		$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('emailIconUrl'));
+		$this->assertStringContainsString('email.png', $this->getPrivateProperty('emailIconUrl'));
+		$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('listItemIconUrl'));
+		$this->assertStringContainsString('list-item-icon.png', $this->getPrivateProperty('listItemIconUrl'));
 	}
 
 	public function testHtmlTemplatePropertiesExist(): void {
