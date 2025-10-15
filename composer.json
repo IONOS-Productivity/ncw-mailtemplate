@@ -2,13 +2,7 @@
 	"name": "nextcloud/ncw_mailtemplate",
 	"description": "Customised email templates for Nextcloud",
 	"license": "AGPL-3.0-or-later",
-	"authors": [
-		{
-			"name": "Aliza Held",
-			"email": "aliza.held@strato.de",
-			"homepage": "https://github.com/IONOS-Productivity"
-		}
-	],
+	
 	"autoload": {
 		"psr-4": {
 			"OCA\\NcwMailtemplate\\": "lib/"
