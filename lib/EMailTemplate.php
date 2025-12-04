@@ -7,12 +7,16 @@ namespace OCA\NcwMailtemplate;
 use OC\Mail\EMailTemplate as ParentTemplate;
 use OCA\NcwMailtemplate\AppInfo\Application;
 use OCP\Defaults;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\IUser;
+use OCP\IUserManager;
 use OCP\L10N\IFactory;
 
 class EMailTemplate extends ParentTemplate {
 	private IL10N $l;
+	private ?IUser $user = null;
 
 	// Generated asset URLs (filled in constructor)
 	private string $spacerUrl = '';
@@ -57,14 +61,89 @@ class EMailTemplate extends ParentTemplate {
 	) {
 		parent::__construct($defaults, $urlGenerator, $l10nFactory, $logoWidth, $logoHeight, $emailId, $data);
 
-		// Initialize localization object
-		$this->l = $l10nFactory->get(Application::APP_ID);
+		// Try to get user from various sources (for recipient's language)
+		$this->user = $this->determineUser($this->data);
+
+		// Get language: user's preference, or system default
+		if ($this->user) {
+			$lang = $this->l10nFactory->getUserLanguage($this->user);
+		} else {
+			$config = \OC::$server->get(IConfig::class);
+			$lang = $config->getSystemValue('default_language', 'en');
+		}
+		$this->l = $this->l10nFactory->get(Application::APP_ID, $lang);
 
 		// Generate URLs for template assets
 		$this->generateTemplateAssetUrls($urlGenerator);
 
 		// Load all HTML template files
 		$this->loadHtmlTemplateFiles();
+	}
+
+	/**
+	 * Determine the user for this email template
+	 * Tries multiple sources: data array keys, current logged-in user, etc.
+	 *
+	 * Supported data keys (from various email types):
+	 * - userid: from settings.Welcome
+	 * - emailAddress: from settings.PasswordChanged, settings.EmailChanged
+	 * - newEMailAddress: from settings.EmailChanged
+	 * - shareWith: from file sharing emails (can be email or user ID)
+	 * - displayname: from various emails
+	 * - attendee_name: from calendar invitation emails
+	 *
+	 * @param array $data
+	 * @return IUser|null
+	 */
+	private function determineUser(array $data): ?IUser {
+		$userManager = \OC::$server->get(IUserManager::class);
+
+		// Priority 1: Try to get recipient by user ID (most direct)
+		$userIdKeys = ['userid', 'userId', 'uid'];
+		foreach ($userIdKeys as $key) {
+			if (isset($data[$key]) && is_string($data[$key])) {
+				$user = $userManager->get($data[$key]);
+				if ($user instanceof IUser) {
+					return $user;
+				}
+			}
+		}
+
+		// Priority 2: Try to get recipient by email address
+		$emailKeys = ['emailAddress', 'newEMailAddress', 'shareWith'];
+		foreach ($emailKeys as $key) {
+			if (isset($data[$key]) && is_string($data[$key]) && str_contains($data[$key], '@')) {
+				$value = $data[$key];
+
+				// Try to get user by email address
+				$users = $userManager->getByEmail($value);
+				if (!empty($users)) {
+					return reset($users);
+				}
+			}
+		}
+
+		// Priority 3: Try attendee_name or displayname as user ID or display name search
+		$nameKeys = ['attendee_name', 'displayname'];
+		foreach ($nameKeys as $key) {
+			if (isset($data[$key]) && is_string($data[$key])) {
+				$value = $data[$key];
+
+				// First try as user ID
+				$user = $userManager->get($value);
+				if ($user instanceof IUser) {
+					return $user;
+				}
+
+				// Then try as display name search
+				$users = $userManager->searchDisplayName($value, 1);
+				if (!empty($users)) {
+					return reset($users);
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
