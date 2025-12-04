@@ -58,12 +58,13 @@ class EMailTemplate extends ParentTemplate {
 		?int $logoHeight,
 		string $emailId,
 		array $data = [],
-	) {
+		) {
+		// Initialize parent first to set up basic properties
 		parent::__construct($defaults, $urlGenerator, $l10nFactory, $logoWidth, $logoHeight, $emailId, $data);
-
+		
 		// Try to get user from various sources (for recipient's language)
 		$this->user = $this->determineUser($this->data);
-
+		
 		// Get language: user's preference, or system default
 		if ($this->user) {
 			$lang = $this->l10nFactory->getUserLanguage($this->user);
@@ -76,8 +77,12 @@ class EMailTemplate extends ParentTemplate {
 		// Generate URLs for template assets
 		$this->generateTemplateAssetUrls($urlGenerator);
 
-		// Load all HTML template files
+		// Load all HTML template files - this will override parent's head and tail
 		$this->loadHtmlTemplateFiles();
+		
+		// Replace the parent's htmlBody that was set with the parent's head
+		// with our custom head
+		$this->htmlBody = $this->head;
 	}
 
 	/**
