@@ -17,6 +17,7 @@ use OCP\L10N\IFactory;
 class EMailTemplate extends ParentTemplate {
 	private IL10N $l;
 	private ?IUser $user = null;
+	private BrandResolver $brandResolver;
 
 	// Generated asset URLs (filled in constructor)
 	private string $spacerUrl = '';
@@ -58,28 +59,31 @@ class EMailTemplate extends ParentTemplate {
 		?int $logoHeight,
 		string $emailId,
 		array $data = [],
-		) {
+	) {
 		// Initialize parent first to set up basic properties
 		parent::__construct($defaults, $urlGenerator, $l10nFactory, $logoWidth, $logoHeight, $emailId, $data);
-		
+
+		// Initialize the brand resolver from server config
+		$config = \OC::$server->get(IConfig::class);
+		$this->brandResolver = new BrandResolver($config);
+
 		// Try to get user from various sources (for recipient's language)
 		$this->user = $this->determineUser($this->data);
-		
+
 		// Get language: user's preference, or system default
 		if ($this->user) {
 			$lang = $this->l10nFactory->getUserLanguage($this->user);
 		} else {
-			$config = \OC::$server->get(IConfig::class);
 			$lang = $config->getSystemValue('default_language', 'en');
 		}
 		$this->l = $this->l10nFactory->get(Application::APP_ID, $lang);
 
-		// Generate URLs for template assets
+		// Generate URLs for template assets (brand-aware)
 		$this->generateTemplateAssetUrls($urlGenerator);
 
 		// Load all HTML template files - this will override parent's head and tail
 		$this->loadHtmlTemplateFiles();
-		
+
 		// Replace the parent's htmlBody that was set with the parent's head
 		// with our custom head
 		$this->htmlBody = $this->head;
@@ -154,24 +158,34 @@ class EMailTemplate extends ParentTemplate {
 	/**
 	 * Generate URLs for template assets (images, etc.)
 	 *
+	 * Uses BrandResolver to pick brand-specific images with fallback to the
+	 * default brand.
+	 *
 	 * @param IURLGenerator $urlGenerator
 	 */
 	private function generateTemplateAssetUrls(IURLGenerator $urlGenerator): void {
-		// store on the instance so we can inject into templates
-		$this->spacerUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, 'spacer.png'));
-		$this->logoUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, 'ionos_logo_de.png'));
-		$this->emailIconUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, 'email.png'));
-		$this->listItemIconUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, 'list-item-icon.png'));
+		$spacerImage = $this->brandResolver->resolveImageName('spacer.png');
+		$logoImage = $this->brandResolver->resolveImageName('logo.png');
+		$emailIconImage = $this->brandResolver->resolveImageName('email.png');
+		$listItemIconImage = $this->brandResolver->resolveImageName('list-item-icon.png');
+
+		$this->spacerUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, $spacerImage));
+		$this->logoUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, $logoImage));
+		$this->emailIconUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, $emailIconImage));
+		$this->listItemIconUrl = $urlGenerator->getAbsoluteURL($urlGenerator->imagePath(Application::APP_ID, $listItemIconImage));
 	}
 
 	/**
 	 * Load HTML template files for email components
 	 *
+	 * Uses BrandResolver to pick brand-specific template files with fallback
+	 * to the default brand.
+	 *
 	 * @return void
 	 */
 	private function loadHtmlTemplateFiles(): void {
 		foreach (self::HTML_TEMPLATE_FILES as $property => $file) {
-			$templatePath = __DIR__ . '/templates/email/' . $file;
+			$templatePath = $this->brandResolver->resolveTemplatePath($file);
 			if (!file_exists($templatePath)) {
 				continue;
 			}
