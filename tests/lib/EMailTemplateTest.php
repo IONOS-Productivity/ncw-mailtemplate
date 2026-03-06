@@ -16,11 +16,9 @@ use PHPUnit\Framework\TestCase;
 class EMailTemplateTest extends TestCase {
 	public function testIncludeTemplateFileIsCovered(): void {
 		// Setup: create a real template file for 'head.html'
-		$templateDir = __DIR__ . '/../../lib/templates/email';
-		if (!is_dir($templateDir)) {
-			mkdir($templateDir, 0777, true);
-		}
+		$templateDir = __DIR__ . '/../../lib/templates/email/ionos';
 		$templateFile = $templateDir . '/head.html';
+		$originalContent = file_exists($templateFile) ? file_get_contents($templateFile) : null;
 		$expectedContent = '<div>Test Head Template</div>';
 		file_put_contents($templateFile, $expectedContent);
 
@@ -39,8 +37,12 @@ class EMailTemplateTest extends TestCase {
 		$value = $prop->getValue($this->emailTemplate);
 		$this->assertStringContainsString($expectedContent, $value);
 
-		// Cleanup
-		unlink($templateFile);
+		// Cleanup: restore original content or remove file
+		if ($originalContent !== null) {
+			file_put_contents($templateFile, $originalContent);
+		} else {
+			unlink($templateFile);
+		}
 	}
 	public function testLoadHtmlTemplateFilesMethodIsCovered(): void {
 		// Reset template properties to empty string to verify method effect
@@ -103,7 +105,7 @@ class EMailTemplateTest extends TestCase {
 		$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('spacerUrl'));
 		$this->assertStringContainsString('spacer.png', $this->getPrivateProperty('spacerUrl'));
 		$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('logoUrl'));
-		$this->assertStringContainsString('ionos_logo_de.png', $this->getPrivateProperty('logoUrl'));
+		$this->assertStringContainsString('ionos/logo.png', $this->getPrivateProperty('logoUrl'));
 		$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('emailIconUrl'));
 		$this->assertStringContainsString('email.png', $this->getPrivateProperty('emailIconUrl'));
 		$this->assertStringStartsWith('https://example.org', $this->getPrivateProperty('listItemIconUrl'));
