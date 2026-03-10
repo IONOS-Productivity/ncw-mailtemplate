@@ -22,26 +22,28 @@ class EMailTemplateTest extends TestCase {
 		$expectedContent = '<div>Test Head Template</div>';
 		file_put_contents($templateFile, $expectedContent);
 
-		// Reset the property to empty string
-		$reflection = new \ReflectionClass($this->emailTemplate);
-		$prop = $reflection->getProperty('head');
-		$prop->setAccessible(true);
-		$prop->setValue($this->emailTemplate, '');
+		try {
+			// Reset the property to empty string
+			$reflection = new \ReflectionClass($this->emailTemplate);
+			$prop = $reflection->getProperty('head');
+			$prop->setAccessible(true);
+			$prop->setValue($this->emailTemplate, '');
 
-		// Call the private method via reflection
-		$method = $reflection->getMethod('loadHtmlTemplateFiles');
-		$method->setAccessible(true);
-		$method->invoke($this->emailTemplate);
+			// Call the private method via reflection
+			$method = $reflection->getMethod('loadHtmlTemplateFiles');
+			$method->setAccessible(true);
+			$method->invoke($this->emailTemplate);
 
-		// Assert the property now contains the expected content
-		$value = $prop->getValue($this->emailTemplate);
-		$this->assertStringContainsString($expectedContent, $value);
-
-		// Cleanup: restore original content or remove file
-		if ($originalContent !== null) {
-			file_put_contents($templateFile, $originalContent);
-		} else {
-			unlink($templateFile);
+			// Assert the property now contains the expected content
+			$value = $prop->getValue($this->emailTemplate);
+			$this->assertStringContainsString($expectedContent, $value);
+		} finally {
+			// Cleanup: restore original content or remove file
+			if ($originalContent !== null) {
+				file_put_contents($templateFile, $originalContent);
+			} else {
+				unlink($templateFile);
+			}
 		}
 	}
 	public function testLoadHtmlTemplateFilesMethodIsCovered(): void {
