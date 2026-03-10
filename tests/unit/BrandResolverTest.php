@@ -33,9 +33,9 @@ class BrandResolverTest extends TestCase {
 
 	// ── getBrand() ──────────────────────────────────────────────────────
 
-	public function testGetBrandReturnsDefaultWhenNotConfigured(): void {
+	public function testGetBrandReturnsDefaultBrand(): void {
 		$resolver = $this->createResolver('ionos');
-		$this->assertSame('ionos', $resolver->getBrand());
+		$this->assertSame(BrandResolver::DEFAULT_BRAND, $resolver->getBrand());
 	}
 
 	public function testGetBrandReturnsConfiguredBrand(): void {
